@@ -19,6 +19,7 @@ package com.cedarpolicy.value;
 import java.util.Optional;
 import java.util.Objects;
 
+import com.cedarpolicy.library.NativeLibraryLoader;
 import com.cedarpolicy.serializer.JsonEUID;
 
 /**
@@ -29,8 +30,8 @@ public final class EntityUID extends Value {
     private final EntityTypeName type;
     private final EntityIdentifier id;
 
-    static { 
-        System.load(System.getenv("CEDAR_JAVA_FFI_LIB"));
+    static {
+        NativeLibraryLoader.loadLibrary();
     }
 
     /**

@@ -62,8 +62,10 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 /** Integration tests Used by Cedar / corpus tests saved from the fuzzer. */
+@EnabledIfEnvironmentVariable(named = "CEDAR_INTEGRATION_TESTS_ROOT", matches = ".*")
 public class SharedIntegrationTests {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final String CEDAR_INTEGRATION_TESTS_ROOT =

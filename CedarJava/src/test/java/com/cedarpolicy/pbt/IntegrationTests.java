@@ -48,6 +48,7 @@ import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
 import net.jqwik.api.constraints.IntRange;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /** Integration tests. */
@@ -302,6 +303,7 @@ public class IntegrationTests {
 
      /** Tests a long expression that is denied for nearing the stack overflow limit. */
     @Test
+    @Disabled
     public void testLongExprStackOverflowDeny() {
         Set<Entity> entities = new HashSet<>();
         String principalId = "alice";

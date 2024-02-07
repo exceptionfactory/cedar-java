@@ -1,6 +1,8 @@
 
 package com.cedarpolicy.value;
 
+import com.cedarpolicy.library.NativeLibraryLoader;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Objects;
@@ -17,7 +19,7 @@ public final class EntityTypeName {
     private List<String> namespace;
     private String basename;
     static {
-        System.load(System.getenv("CEDAR_JAVA_FFI_LIB"));
+        NativeLibraryLoader.loadLibrary();
     }
 
     /**

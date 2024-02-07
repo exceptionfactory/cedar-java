@@ -16,6 +16,7 @@
 
 package com.cedarpolicy.model.slice;
 
+import com.cedarpolicy.library.NativeLibraryLoader;
 import com.cedarpolicy.model.exception.InternalException;
 import com.cedarpolicy.value.EntityUID;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,7 +32,7 @@ public class Policy {
     private static final Logger LOG = LoggerFactory.getLogger(Policy.class);
     private static final AtomicInteger idCounter = new AtomicInteger(0);
     static {
-        System.load(System.getenv("CEDAR_JAVA_FFI_LIB"));
+        NativeLibraryLoader.loadLibrary();
     }
 
     /** Policy string. */
