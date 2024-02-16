@@ -24,7 +24,9 @@ jobs:
       - name: Install Zig
         run: brew install zig
       - name: Add Rust Build Targets
-        run: rustup target add x86_64-unknown-linux-gnu
+        run: |
+          rustup target add x86_64-unknown-linux-gnu
+          rustup target add aarch64-unknown-linux-gnu
       - name: Maven Build
         working-directory: CedarJava
         run: mvn clean deploy -DdistributionOwner=${{ github.repository_owner }}

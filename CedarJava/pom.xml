@@ -6,7 +6,7 @@
 
     <groupId>com.cedarpolicy</groupId>
     <artifactId>cedar-java</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.1-1</version>
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
@@ -14,6 +14,8 @@
         <foreignFunctionLibraryName>libcedar_java_ffi</foreignFunctionLibraryName>
         <aarch64AppleTarget>aarch64-apple-darwin</aarch64AppleTarget>
         <aarch64AppleOutputDirectory>${project.build.outputDirectory}/jne/macos/aarch64</aarch64AppleOutputDirectory>
+        <aarch64LinuxTarget>aarch64-unknown-linux-gnu</aarch64LinuxTarget>
+        <aarch64LinuxOutputDirectory>${project.build.outputDirectory}/jne/linux/aarch64</aarch64LinuxOutputDirectory>
         <amd64LinuxTarget>x86_64-unknown-linux-gnu</amd64LinuxTarget>
         <amd64LinuxOutputDirectory>${project.build.outputDirectory}/jne/linux/amd64</amd64LinuxOutputDirectory>
         <distributionOwner>cedarpolicy</distributionOwner>
@@ -194,6 +196,51 @@
                             <arguments>
                                 <argument>${foreignFunctionModulePath}/target/${amd64LinuxTarget}/release/${foreignFunctionLibraryName}.so</argument>
                                 <argument>${amd64LinuxOutputDirectory}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>cargo-zigbuild-aarch64-linux</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>cargo</executable>
+                            <arguments>
+                                <argument>zigbuild</argument>
+                                <argument>--release</argument>
+                                <argument>--target=${aarch64LinuxTarget}</argument>
+                                <argument>--manifest-path</argument>
+                                <argument>${foreignFunctionModulePath}/Cargo.toml</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create-target-directory-aarch64-linux</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>mkdir</executable>
+                            <arguments>
+                                <argument>-p</argument>
+                                <argument>${aarch64LinuxOutputDirectory}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-release-library-aarch64-linux</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>cp</executable>
+                            <arguments>
+                                <argument>${foreignFunctionModulePath}/target/${aarch64LinuxTarget}/release/${foreignFunctionLibraryName}.so</argument>
+                                <argument>${aarch64LinuxOutputDirectory}</argument>
                             </arguments>
                         </configuration>
                     </execution>
