@@ -92,7 +92,7 @@ def rustLibraryTargets = [
         'aarch64-apple-darwin' : 'libcedar_java_ffi.dylib',
         'aarch64-unknown-linux-gnu' : 'libcedar_java_ffi.so',
         'x86_64-apple-darwin' : 'libcedar_java_ffi.dylib',
-        'x86_64-pc-windows-gnu' : 'cedar_java_ffi.dll',
+        'x86_64-pc-windows-msvc' : 'cedar_java_ffi.dll',
         'x86_64-unknown-linux-gnu' : 'libcedar_java_ffi.so'
 ]
 
@@ -100,19 +100,19 @@ def rustJavaTargets = [
         'aarch64-apple-darwin' : 'macos/aarch64',
         'aarch64-unknown-linux-gnu' : 'linux/aarch64',
         'x86_64-apple-darwin' : 'macos/x86_64',
-        'x86_64-pc-windows-gnu' : 'windows/x86_64',
+        'x86_64-pc-windows-msvc' : 'windows/x86_64',
         'x86_64-unknown-linux-gnu' : 'linux/x86_64'
 ]
 
-tasks.register('installCargoZigbuild', Exec) {
+tasks.register('installCargoBuild', Exec) {
     group 'Build'
-    description 'Installs Cargo Zigbuild for Rust compilation.'
+    description 'Installs Cargo build packages for Rust cross-compilation.'
 
-    commandLine 'cargo', 'install', 'cargo-zigbuild'
+    commandLine 'cargo', 'install', 'cargo-zigbuild', 'cargo-xwin'
 }
 
 tasks.register('installRustTargets') {
-    dependsOn('installCargoZigbuild')
+    dependsOn('installCargoBuild')
     group 'Build'
     description 'Installs Rust platform build targets.'
 
@@ -132,9 +132,16 @@ tasks.register('compileFFI') {
 
     doLast {
         rustLibraryTargets.forEach { rustTarget, libraryFile ->
-            exec {
-                workingDir = ffiDir
-                commandLine 'cargo', 'zigbuild', '--features', 'partial-eval', '--release', '--target', rustTarget
+            if (rustTarget == 'x86_64-pc-windows-msvc') {
+                exec {
+                    workingDir = ffiDir
+                    commandLine 'cargo', 'xwin', 'build', '--features', 'partial-eval', '--release', '--target', rustTarget
+                }
+            } else {
+                exec {
+                    workingDir = ffiDir
+                    commandLine 'cargo', 'zigbuild', '--features', 'partial-eval', '--release', '--target', rustTarget
+                }
             }
 
             def sourcePath = "${ffiDir}/target/${rustTarget}/release/${libraryFile}"
